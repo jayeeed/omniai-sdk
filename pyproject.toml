@@ -71,7 +71,7 @@ Homepage = "https://omniai.go-agents.app"
 Documentation = "https://omniai.go-agents.app/docs"
 Repository = "https://github.com/jayeeed/omniai-sdk"
 Issues = "https://github.com/jayeeed/omniai-sdk/issues"
-Changelog = "https://github.com/jayeeed/omniai-sdk/blob/main/CHANGELOG.md"
+Changelog = "https://github.com/jayeeed/omniai-sdk"
 
 [tool.setuptools.packages.find]
 where = ["."]

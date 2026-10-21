@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-OmniAI SDK Verification Script.
+OmniAI Kit Verification Script.
 
 Usage:
     python test.py
@@ -30,7 +30,7 @@ except ImportError as e:
 
 def main():
     print("=" * 60)
-    print(f"🧪 Testing OmniAI Python SDK v{__version__}")
+    print(f"🧪 Testing OmniAI Python SDK v{__version__} (omniai-kit)")
     print("=" * 60)
 
     # 1. Verify Router Engine
@@ -74,7 +74,7 @@ def main():
         try:
             res = client.chat(
                 model="gemini:gemini-2.5-flash",
-                prompt="Say 'OmniAI SDK verified!' in exactly 3 words.",
+                prompt="Say 'OmniAI Kit verified!' in exactly 3 words.",
             )
             print(f"🎉 Live Response: {res}")
         except Exception as err:
