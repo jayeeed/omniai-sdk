@@ -273,8 +273,7 @@ OmniaiError
 omniai-sdk/
 ├── .github/
 │   └── workflows/
-│       ├── ci.yml              # Python 3.9 - 3.13 test matrix
-│       └── publish.yml         # PyPI Trusted Publishing workflow
+│       └── pypi-publish.yml    # PyPI publishing workflow
 ├── omniai/
 │   ├── resources/              # Modular resource namespaces
 │   │   ├── chat.py
