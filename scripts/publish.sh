@@ -15,9 +15,20 @@ echo "=========================================================="
 echo "🧹 Cleaning previous build artifacts..."
 rm -rf build dist *.egg-info
 
-# 2. Check build tools
+# 2. Check and activate virtual environment
+if [ -z "$VIRTUAL_ENV" ]; then
+    VENV_DIR="$DIR/.venv"
+    if [ ! -d "$VENV_DIR" ]; then
+        echo "🌱 Creating packaging virtual environment in $VENV_DIR..."
+        python3 -m venv "$VENV_DIR"
+    fi
+    echo "⚡ Activating packaging virtual environment..."
+    # shellcheck disable=SC1091
+    source "$VENV_DIR/bin/activate"
+fi
+
 echo "📦 Verifying packaging dependencies (build, twine)..."
-python3 -m pip install --quiet --upgrade build twine
+python3 -m pip install --quiet --upgrade pip build twine
 
 # 3. Build Source Distribution and Binary Wheel
 echo "🔨 Building sdist and bdist_wheel..."
