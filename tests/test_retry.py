@@ -1,6 +1,6 @@
 import httpx
 import pytest
-from omniai.retry import RetryPolicy
+from omniai._base import RetryPolicy
 
 
 def test_retry_policy_defaults():

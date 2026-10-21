@@ -1,7 +1,7 @@
 from unittest.mock import MagicMock, patch
 import pytest
 from pydantic import BaseModel, Field
-from omniai.router import RouterEngine, SUPPORTED_PROVIDERS
+from omniai.resources.router import RouterEngine, SUPPORTED_PROVIDERS
 from omniai.exceptions import OmniaiUnsupportedProviderError
 
 

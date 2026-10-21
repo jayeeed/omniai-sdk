@@ -1,43 +1,32 @@
+"""Type definitions for asynchronous Celery background tasks."""
+
 from __future__ import annotations
 
 import asyncio
-import json
 import logging
 import re
 import time
-from typing import Any, Callable, Generic, Optional, Type, TypeVar, Union
+from typing import Any, Callable, Generic, Optional, Type, TypeVar
 from pydantic import BaseModel
 
 from omniai.exceptions import (
-    OmniaiError,
     OmniaiExecutionError,
     OmniaiTimeoutError,
     OmniaiValidationError,
 )
 
-logger = logging.getLogger("omniai.models")
+logger = logging.getLogger("omniai.types.tasks")
 
 T = TypeVar("T")
 
 
-def _clean_json_text(text: str) -> str:
+def clean_json_text(text: str) -> str:
     """Strips markdown code blocks (e.g. ```json ... ```) from model output."""
     stripped = text.strip()
     match = re.search(r"```(?:json)?\s*([\s\S]*?)\s*```", stripped, re.IGNORECASE)
     if match:
         return match.group(1).strip()
     return stripped
-
-
-class LiveSessionInfo(BaseModel):
-    """LiveKit WebRTC multimodal audio/video session credentials and connection info."""
-    server_url: str
-    room_name: str
-    participant_token: str
-    participant_identity: str
-    model_used: str
-    voice: str
-    video_input: bool = False
 
 
 class TaskStatus(BaseModel):
@@ -50,10 +39,7 @@ class TaskStatus(BaseModel):
 
 
 class TaskJob(Generic[T]):
-    """
-    Synchronous handle to a background task running on the OmniAI Celery queue.
-    Features fault-tolerant polling that survives transient network dropouts.
-    """
+    """Synchronous handle to a background task running on the OmniAI Celery queue."""
 
     def __init__(
         self,
@@ -69,7 +55,6 @@ class TaskJob(Generic[T]):
         self._last_status: Optional[TaskStatus] = None
 
     def get_status(self) -> TaskStatus:
-        """Fetches the latest status of the task."""
         self._last_status = self._status_checker(self.task_id)
         return self._last_status
 
@@ -79,17 +64,13 @@ class TaskJob(Generic[T]):
         interval: float = 1.5,
         max_consecutive_poll_errors: int = 3,
     ) -> T:
-        """
-        Polls until the task completes and returns the result, parsed into response_model if specified.
-        Tolerates transient polling connection failures up to max_consecutive_poll_errors.
-        """
         start_time = time.time()
         consecutive_errors = 0
 
         while time.time() - start_time < timeout:
             try:
                 status = self.get_status()
-                consecutive_errors = 0  # Reset error count on successful check
+                consecutive_errors = 0
             except Exception as poll_err:
                 consecutive_errors += 1
                 logger.warning(
@@ -116,7 +97,7 @@ class TaskJob(Generic[T]):
                                     details={"error": str(val_err)},
                                 ) from val_err
                         elif isinstance(raw_result, str):
-                            cleaned = _clean_json_text(raw_result)
+                            cleaned = clean_json_text(raw_result)
                             try:
                                 return self._response_model.model_validate_json(cleaned)
                             except Exception as val_err:
@@ -139,15 +120,11 @@ class TaskJob(Generic[T]):
         )
 
     def cancel(self) -> dict:
-        """Cancels/revokes the background task."""
         return self._canceller(self.task_id)
 
 
 class AsyncTaskJob(Generic[T]):
-    """
-    Asynchronous handle to a background task running on the OmniAI Celery queue.
-    Features fault-tolerant polling that survives transient network dropouts.
-    """
+    """Asynchronous handle to a background task running on the OmniAI Celery queue."""
 
     def __init__(
         self,
@@ -163,7 +140,6 @@ class AsyncTaskJob(Generic[T]):
         self._last_status: Optional[TaskStatus] = None
 
     async def get_status(self) -> TaskStatus:
-        """Fetches the latest status of the task asynchronously."""
         self._last_status = await self._status_checker(self.task_id)
         return self._last_status
 
@@ -173,10 +149,6 @@ class AsyncTaskJob(Generic[T]):
         interval: float = 1.5,
         max_consecutive_poll_errors: int = 3,
     ) -> T:
-        """
-        Polls asynchronously until the task completes and returns the result.
-        Tolerates transient polling connection failures up to max_consecutive_poll_errors.
-        """
         start_time = time.time()
         consecutive_errors = 0
 
@@ -210,7 +182,7 @@ class AsyncTaskJob(Generic[T]):
                                     details={"error": str(val_err)},
                                 ) from val_err
                         elif isinstance(raw_result, str):
-                            cleaned = _clean_json_text(raw_result)
+                            cleaned = clean_json_text(raw_result)
                             try:
                                 return self._response_model.model_validate_json(cleaned)
                             except Exception as val_err:
@@ -233,5 +205,4 @@ class AsyncTaskJob(Generic[T]):
         )
 
     async def cancel(self) -> dict:
-        """Cancels/revokes the task asynchronously."""
         return await self._canceller(self.task_id)

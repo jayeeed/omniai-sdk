@@ -1,95 +1,117 @@
-"""
-OmniAI Python Client SDK (`omniai`)
+"""OmniAI: Official Python Client SDK for OmniAI Gateway & Multi-Provider LLM Router."""
 
-Official, production-grade Python SDK for the OmniAI AI Gateway and Dynamic Multi-Provider Router.
-
-Supported Providers:
-  - OpenAI (`openai:...`)
-  - Google Gemini (`gemini:...`)
-  - Anthropic Claude (`anthropic:...`)
-  - vLLM Self-Hosted Inference (`vllm:...`)
-
-Quickstart:
-    >>> from omniai import OmniaiClient
-    >>> client = OmniaiClient(api_key="your-api-key")
-    >>> response = client.chat(model="openai:gpt-4o", prompt="Hello world!")
-    >>> print(response)
-"""
-
+from omniai._version import __version__, VERSION
+from omniai._constants import DEFAULT_BASE_URL, SUPPORTED_PROVIDERS
 from omniai.client import (
-    AsyncOmniaiClient,
     OmniaiClient,
-    AsyncOmniAIClient,
+    AsyncOmniaiClient,
     OmniAIClient,
-    AsyncOmniClient,
+    AsyncOmniAIClient,
     OmniClient,
+    AsyncOmniClient,
 )
+from omniai.resources.router import RouterEngine
+from omniai._base import RetryPolicy
 from omniai.exceptions import (
-    OmniAuthError,
-    OmniError,
-    OmniExecutionError,
-    OmniRateLimitError,
-    OmniTimeoutError,
-    OmniaiAuthError,
-    OmniaiConnectionError,
     OmniaiError,
-    OmniaiExecutionError,
+    OmniaiAuthError,
+    OmniaiAuthenticationError,
+    OmniaiPermissionDeniedError,
+    OmniaiAPIError,
+    OmniaiBadRequestError,
     OmniaiNotFoundError,
-    OmniaiPaymentRequiredError,
     OmniaiRateLimitError,
     OmniaiTimeoutError,
-    OmniaiUnsupportedProviderError,
+    OmniaiConnectionError,
+    OmniaiExecutionError,
     OmniaiValidationError,
+    OmniaiPaymentRequiredError,
+    OmniaiUnsupportedProviderError,
+    OmniAIError,
+    OmniAIAuthError,
+    OmniAIAuthenticationError,
+    OmniAIAPIError,
+    OmniAIRateLimitError,
+    OmniAITimeoutError,
+    OmniAIConnectionError,
+    OmniAIValidationError,
+    OmniError,
+    OmniAuthError,
+    OmniExecutionError,
+    OmniTimeoutError,
+    OmniRateLimitError,
 )
-from omniai.live import create_live_session, generate_livekit_token
-from omniai.models import (
-    AsyncTaskJob,
+from omniai.types import (
+    ChatMessage,
+    ChatCompletionChoice,
+    ChatCompletionUsage,
+    ChatCompletionResponse,
+    ChatCompletionChunk,
+    ModelInfo,
+    ModelList,
     LiveSessionInfo,
-    TaskJob,
     TaskStatus,
+    TaskJob,
+    AsyncTaskJob,
 )
-from omniai.retry import RetryPolicy
-from omniai.router import RouterEngine, SUPPORTED_PROVIDERS
-
-__version__ = "1.0.0"
-__author__ = "OmniAI Team"
+from omniai import resources, types
 
 __all__ = [
-    # Primary Client Interfaces
+    "__version__",
+    "VERSION",
+    "DEFAULT_BASE_URL",
+    "SUPPORTED_PROVIDERS",
+    # Clients
     "OmniaiClient",
     "AsyncOmniaiClient",
-    # Convenient Casing & Backward-Compatible Aliases
     "OmniAIClient",
     "AsyncOmniAIClient",
     "OmniClient",
     "AsyncOmniClient",
-    # Core Engine & Retries
+    # Engine & Policies
     "RouterEngine",
     "RetryPolicy",
-    "SUPPORTED_PROVIDERS",
-    # LiveKit Multimodal Realtime
-    "create_live_session",
-    "generate_livekit_token",
-    "LiveSessionInfo",
-    # Background Tasks
-    "TaskJob",
-    "AsyncTaskJob",
-    "TaskStatus",
-    # Typed Exceptions
+    # Exceptions
     "OmniaiError",
     "OmniaiAuthError",
-    "OmniaiPaymentRequiredError",
+    "OmniaiAuthenticationError",
+    "OmniaiPermissionDeniedError",
+    "OmniaiAPIError",
+    "OmniaiBadRequestError",
     "OmniaiNotFoundError",
     "OmniaiRateLimitError",
-    "OmniaiExecutionError",
     "OmniaiTimeoutError",
     "OmniaiConnectionError",
+    "OmniaiExecutionError",
     "OmniaiValidationError",
+    "OmniaiPaymentRequiredError",
     "OmniaiUnsupportedProviderError",
-    # Backward-Compatible Exception Aliases
+    "OmniAIError",
+    "OmniAIAuthError",
+    "OmniAIAuthenticationError",
+    "OmniAIAPIError",
+    "OmniAIRateLimitError",
+    "OmniAITimeoutError",
+    "OmniAIConnectionError",
+    "OmniAIValidationError",
     "OmniError",
     "OmniAuthError",
     "OmniExecutionError",
     "OmniTimeoutError",
     "OmniRateLimitError",
+    # Types
+    "ChatMessage",
+    "ChatCompletionChoice",
+    "ChatCompletionUsage",
+    "ChatCompletionResponse",
+    "ChatCompletionChunk",
+    "ModelInfo",
+    "ModelList",
+    "LiveSessionInfo",
+    "TaskStatus",
+    "TaskJob",
+    "AsyncTaskJob",
+    # Modules
+    "resources",
+    "types",
 ]

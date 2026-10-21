@@ -90,7 +90,22 @@ class OmniaiUnsupportedProviderError(OmniaiError):
     pass
 
 
-# Backward-compatible aliases for legacy imports
+# Standard OpenAI-style & OmniAI naming aliases
+OmniaiAPIError = OmniaiExecutionError
+OmniaiAuthenticationError = OmniaiAuthError
+OmniaiPermissionDeniedError = OmniaiAuthError
+OmniaiBadRequestError = OmniaiValidationError
+
+# Aliases with OmniAI / Omni casing
+OmniAIError = OmniaiError
+OmniAIAuthError = OmniaiAuthError
+OmniAIAuthenticationError = OmniaiAuthError
+OmniAIAPIError = OmniaiAPIError
+OmniAIRateLimitError = OmniaiRateLimitError
+OmniAITimeoutError = OmniaiTimeoutError
+OmniAIConnectionError = OmniaiConnectionError
+OmniAIValidationError = OmniaiValidationError
+
 OmniError = OmniaiError
 OmniAuthError = OmniaiAuthError
 OmniExecutionError = OmniaiExecutionError
